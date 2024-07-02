@@ -1,10 +1,10 @@
 package com.compny.companyService.utils;
 
-
 import com.compny.companyService.annotation.MaskingStrategy;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import com.compny.companyService.constants.MaskingConstant;
 
 public class MaskingUtil {
 
@@ -12,18 +12,15 @@ public class MaskingUtil {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         Boolean shouldMask = (Boolean) request.getAttribute("shouldMask");
 
-        // Check if masking should be applied based on interceptor decision
         if (shouldMask != null && !shouldMask) {
             return value; // Don't mask if shouldMask is false
         }
 
-        // Apply masking based on strategy
         switch (strategy) {
             case EMAIL:
                 return maskEmail(value);
             case PHONE:
                 return maskPhone(value);
-            // Add more cases as needed
             default:
                 return value;
         }
@@ -39,7 +36,6 @@ public class MaskingUtil {
     }
 
     private static String maskPhone(String phone) {
-        // Example masking for phone number
-        return phone.replaceAll("\\d(?=\\d{4})", "*");
+        return phone.replaceAll(MaskingConstant.MOBILE_REGEX, "*");
     }
 }
